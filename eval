@@ -1,0 +1,66 @@
+/** @param {NS} ns **/
+export async function main(ns) {
+	// Put money into a USD format for readability
+	const currency = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+		minimumFractionDigits: 2
+	})
+	
+	// Server
+	var vServer = ns.args[0];
+	ns.tprint("Server: " + vServer);
+	
+	// Server Max Money
+	var vServMaxMon = ns.getServerMaxMoney(vServer);
+	ns.tprint("Server Max Money: " + currency.format(vServMaxMon));
+
+	// Server Current Money Count
+	var vServCurrMon = ns.getServerMoneyAvailable(vServer);
+	ns.tprint("Server Current Money: " + currency.format(vServCurrMon));
+
+	// Difference between max money and current money
+	var vServDiffMon = (vServMaxMon - vServCurrMon);
+	ns.tprint("Difference Between Max and Current: " + 
+				currency.format(vServDiffMon));
+
+	// The decimal representation of the difference in money
+	var vServDiffMonPer = (vServDiffMon / vServMaxMon);
+	ns.tprint("Percent Difference of Money: " + 
+			(vServDiffMonPer * 100).toFixed(4) + "%");
+
+	// How many grows are needed to get to max money
+	var vGrowAnalyze = Math.ceil(ns.growthAnalyze(vServer, (1 + vServDiffMonPer)));
+	ns.tprint("Number of Threads to Max Grow: " + vGrowAnalyze);
+
+	// How much security will increase if all grows are sent
+	var vGrowSecInc = ns.growthAnalyzeSecurity(vGrowAnalyze);
+	ns.tprint("Grow will increase security by: " + vGrowSecInc);
+
+	// Server minimum security
+	var vServMinSec = ns.getServerMinSecurityLevel(vServer);
+	ns.tprint("Server Minimum Security: " + vServMinSec);
+
+	// Server current secuirty
+	var vServCurrSec = ns.getServerSecurityLevel(vServer);
+	ns.tprint("Server Current Security: " + vServCurrSec);
+
+	// Difference between current and minimum security
+	var vServDiffSec = ((vServCurrSec + vGrowSecInc) - vServMinSec);
+	ns.tprint("Difference between Max and Current Security: " + 
+					vServDiffSec);
+
+	// Value of one Weak attack
+	var vServWeakAnalyze = ns.weakenAnalyze(1);
+	ns.tprint("One Thread Weaken: " + vServWeakAnalyze);
+
+	// Determine how many threads are needed to minimize security
+	if (vServDiffSec > vServWeakAnalyze) {
+		var vWeakThread = Math.ceil(vServDiffSec / vServWeakAnalyze);
+	} else {
+		var vWeakThread = 1; 
+	}
+	
+	ns.tprint("Grow Thread Count: " + vGrowAnalyze);
+	ns.tprint("Weak Thread Count: " + vWeakThread);
+}
