@@ -1,0 +1,12 @@
+/** @param {NS} ns **/
+export async function main(ns) {
+	var i = 1;
+	while (i <= 100) {
+		await ns.wget("https://raw.githubusercontent.com/Demiser500/BitBurner/main/Hack", "hack-" + i + ".ns");
+		await ns.wget("https://raw.githubusercontent.com/Demiser500/BitBurner/main/Weaken", "weaken-" + i + ".ns");
+		await ns.wget("https://raw.githubusercontent.com/Demiser500/BitBurner/main/Grow", "grow-" + i + ".ns");
+		i++;
+		await ns.sleep(200);
+	}
+	
+}
